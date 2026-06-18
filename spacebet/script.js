@@ -2,7 +2,13 @@
   "use strict";
 
   var ASSET_ORIGIN = "https://spacebet-pi.vercel.app";
-  var cssPath = "/spacebet-interface.css";
+  var cssPath = inferCssPath();
+
+  function inferCssPath() {
+    var currentScript = document.currentScript && document.currentScript.src;
+    if (!currentScript) return "https://cdn.jsdelivr.net/gh/edavet/spacebet@main/spacebet/spacebet.css";
+    return currentScript.split("?")[0].replace(/script\.js$/, "spacebet.css");
+  }
 
   function asset(path) {
     return ASSET_ORIGIN + path;
@@ -44,7 +50,7 @@
 
   function ensureCss() {
     var href = cssPath;
-    if (document.querySelector('[data-spacebet-interface-css], link[href$="spacebet-interface.css"]')) return;
+    if (document.querySelector('[data-spacebet-interface-css], link[href*="/spacebet/spacebet.css"]')) return;
     var link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = href;
